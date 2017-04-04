@@ -1,5 +1,4 @@
 .pCombobox {
-  display: inline-block;
   position: relative;
 }
 
@@ -28,7 +27,7 @@
 }
 
 .pCombobox ul > li.pCombobox-active {
-  background: #85a1e0;
+  background: #ADE1F5;
 }
  .pCombobox ul>li {
   transition: background .05s;

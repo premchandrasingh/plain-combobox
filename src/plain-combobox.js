@@ -1,11 +1,11 @@
 angular.module('pCombobox', []).directive('pCombobox', [function () {
     var templateString = '<div class="pCombobox">' +
         '        <input type="text" name="{{name}}" placeholder="{{placeholder}}" autocomplete="off" ng-model="search"' +
-        '            ng-class="{{class}}"' +
+        '            class="{{cssClass}}"' +
         '            ng-required="isRequired" ng-change="events.change()" ng-focus="events.focus()" ng-blur="events.blur($event)" p-combobox-validator' +
         '            class="form-control" />' +
         '            <ul ng-show="isOpen">' +
-        '                <li ng-repeat="item in _options" ng-click="events.select(item)" ng-mouseenter="events.mouseenter($index)" ng-mousedown="events.mousedown()"' +
+        '                <li ng-repeat="item in options" ng-click="events.select(item)" ng-mouseenter="events.mouseenter($index)" ng-mousedown="events.mousedown()"' +
         '                    ng-class="{\'pCombobox-active\': activeIndex === $index}">' +
         '                    <span ng-if="item.readableName">{{item.readableName}}</span>' +
         '                    <span ng-if="!item.readableName">{{item}}</span>' +
@@ -21,7 +21,7 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
             selected: '=',
             isRequired: '=?',
             name: '@',
-            class: '@',
+            cssClass: '@',
             placeholder: '@',
             filter: '&', // Filter should always return a promise
             onSelected: '&'
@@ -50,9 +50,7 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
             scope.name = scope.name || Date.now();
             scope.isRequired = scope.isRequired || false;
             scope.search = scope.selected;
-            scope._options = scope.options || [];
-
-
+            var _options = scope.options || [];
 
             scope.events = {
                 change: function () {
@@ -90,8 +88,7 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                     scope.search = item;
                     pvt.closePopup()
                     pvt.updateValidation();
-                    //scope._options = [item];
-
+                   
                     if (scope.onSelected && angular.isFunction(scope.onSelected())) {
                         scope.onSelected()(item);
                     }
@@ -100,6 +97,9 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
 
             element.bind("keydown", function (event) {
                 switch (event.which) {
+                    case 27: //escape
+                        scope.$apply(pvt.closePopup);
+                        break;
                     case 38: //up
                         scope.$apply(pvt.up);
                         break;
@@ -130,12 +130,12 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                         pvt.setActive(upIndex);
                     }
                     else {
-                        pvt.setActive(scope._options.length - 1);
+                        pvt.setActive(scope.options.length - 1);
                     }
                 },
                 down: function () {
                     var downIndex = scope.activeIndex + 1;
-                    if (downIndex < scope._options.length) {
+                    if (downIndex < scope.options.length) {
                         pvt.setActive(downIndex);
                     } else {
                         pvt.setActive(0);
@@ -146,8 +146,8 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                     scope.activeIndex = index;
                 },
                 selectActiveItem: function () {
-                    if (scope.activeIndex >= 0 && scope.activeIndex < scope._options.length) {
-                        scope.events.select(scope._options[scope.activeIndex]);
+                    if (scope.activeIndex >= 0 && scope.activeIndex < scope.options.length) {
+                        scope.events.select(scope.options[scope.activeIndex]);
                     }
                     else if (scope.activeIndex === -1) {
                         scope.events.select(scope.search);
@@ -157,8 +157,8 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                     if (!item)
                         return -1;
                     item = item.toLowerCase();
-                    for (var i = 0; i < scope._options.length; i++) {
-                        if (scope._options[i].toLowerCase() === item)
+                    for (var i = 0; i < scope.options.length; i++) {
+                        if (scope.options[i].toLowerCase() === item)
                             return i;
                     }
                     return -1;
