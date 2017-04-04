@@ -7,8 +7,8 @@
   ],
   "description": "Angular directive to create simple combobox",
   "main": [
-    "plain-combobox.js",
-    "plain-combobox.css"
+    "src/plain-combobox.js",
+    "src/plain-combobox.css"
   ],
   "keywords": [
     "angular",
