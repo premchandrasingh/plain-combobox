@@ -1,0 +1,25 @@
+{
+  "name": "plain-combobox",
+  "version": "1.0.0",
+  "homepage": "https://github.com/premchandrasingh/plain-combobox",
+  "authors": [
+    "prem <premchandrasingh@gmail.com>"
+  ],
+  "description": "Angular directive to create simple combobox",
+  "keywords": [
+    "angular",
+    "combobox"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "bower": "^1.8.0",
+    "gulp": "^3.9.1",
+    "gulp-js-html-inject": "0.0.1"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "demo",
+    "node_modules"
+  ]
+}

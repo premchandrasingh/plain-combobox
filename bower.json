@@ -1,0 +1,25 @@
+{
+  "name": "plain-combobox",
+  "version": "1.0.0",
+  "homepage": "https://github.com/premchandrasingh/plain-combobox",
+  "authors": [
+    "prem <premchandrasingh@gmail.com>"
+  ],
+  "description": "Angular directive to create simple combobox",
+  "main": [
+    "plain-combobox.js",
+    "plain-combobox.css"
+  ],
+  "keywords": [
+    "angular",
+    "combobox"
+  ],
+  "dependencies": {
+    "angular": ">= 1.3.0"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "demo"
+  ]
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Demo: Plain combobox</title>
+    <link rel='stylesheet' href='../src/plain-combobox.css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
+    <style>
+        body {
+            padding: 10px 0 0 40px;
+        }
+        .pCombobox ul{
+            max-height: 300px;
+        }
+    </style>
+</head>
+
+<body ng-app="demoApp">
+
+    <div class="content" ng-controller="demoController as demoCtrl">
+        <h2>Demo: Plain combobox</h2>
+
+        <p>Code @ <a href="https://github.com/premchandrasingh/plain-combobox">Github</a>.</p>
+
+        <br/>
+        <br/>
+        <form name="demoFormStrings" ng-submit="demoCtrl.onStringFormSubmit()" novalidate>
+            <p-combobox placeholder="- None -" name="hot-languages" is-required="true" filter="demoCtrl.stringFilter" options="demoCtrl.stringOptions"
+                selected="demoCtrl.selectedString" on-selected="demoCtrl.onStringSelected">
+            </p-combobox>
+            <button type="submit" ng-disabled="demoFormStrings.$invalid">Submit</button>
+        </form>
+        <p>{{demoCtrl.stringMessage}}</p>
+
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
+    <script src="../src/plain-combobox.js"></script>
+
+    <script>
+        var demoApp = angular.module('demoApp', ['pCombobox']);
+
+        demoApp.controller('demoController', ['$scope', '$q',
+            function ($scope, $q) {
+                var self = this;
+
+                self.stringMessage = '';
+                self.selectedString = 'NodeJs';
+                self.stringOptions = [
+                    'C#',
+                    'Python',
+                    'NodeJs',
+                    'Javascript',
+                    'Angular',
+                    'React',
+                    'React Native',
+                    'Rubby',
+                    'Rail',
+                    'Php',
+                    'Java',
+                    '.Net',
+                    'iOS - Objective C',
+                    'iOS - Swift',
+                    'Android',
+                ];
+
+                self.stringFilter = function (userInput) {
+                    var filter = $q.defer();
+                    var normalisedInput = userInput.toLowerCase();
+
+                    var filteredArray = self.stringOptions.filter(function (country) {
+                        return country.toLowerCase().indexOf(normalisedInput) === 0;
+                    });
+
+                    filter.resolve(filteredArray);
+                    return filter.promise;
+                };
+
+
+                self.onStringSelected = function (item) {
+                    self.stringMessage = 'Selected item: ' + item;
+                };
+
+                self.onStringFormSubmit = function () {
+                    if ($scope.demoFormStrings.$valid) {
+                        self.stringMessage = 'Submited STRING form with : ' + self.selectedString;
+                    }
+                };
+            }
+        ]);
+    </script>
+</body>
+
+</html>
