@@ -88,7 +88,7 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                     scope.search = item;
                     pvt.closePopup()
                     pvt.updateValidation();
-                   
+
                     if (scope.onSelected && angular.isFunction(scope.onSelected())) {
                         scope.onSelected()(item);
                     }
@@ -125,6 +125,9 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                     scope.isOpen = false;
                 },
                 up: function () {
+                    if (!scope.isOpen)
+                        return;
+
                     var upIndex = scope.activeIndex - 1;
                     if (upIndex >= 0) {
                         pvt.setActive(upIndex);
@@ -134,6 +137,8 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                     }
                 },
                 down: function () {
+                    if (!scope.isOpen)
+                        return;
                     var downIndex = scope.activeIndex + 1;
                     if (downIndex < scope.options.length) {
                         pvt.setActive(downIndex);
