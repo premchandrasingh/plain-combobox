@@ -23,7 +23,7 @@
 
 .pCombobox ul > li {
   cursor: pointer;
-  padding: 5px 10px;
+  padding: 1px 10px;
 }
 
 .pCombobox ul > li.pCombobox-active {
