@@ -23,7 +23,8 @@ Properties other than `options` & `selected` are optional.
 Download the repository and open `index.html` inside `demo` folder
 
 # Quick look and feel
-![Image](https://bower.io/img/bower-logo.svg)
+![Image](img/01-plain-combobox.png)
+![Image](img/02-plain-combobox.png)
 
 # Road map
 * Add support for object type
