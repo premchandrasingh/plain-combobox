@@ -1,4 +1,4 @@
-angular.module('pCombobox', []).directive('pCombobox', [function () {
+angular.module('pCombobox', []).directive('pCombobox', ['$window', function ($window) {
     var templateString = '<div class="pCombobox">' +
         '        <input type="text" name="{{name}}" placeholder="{{placeholder}}" autocomplete="off" ng-model="search"' +
         '            class="{{cssClass}}"' +
@@ -52,6 +52,17 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
             scope.search = scope.selected;
             var _options = scope.options || [];
 
+
+
+            // scope.$watch(function () {
+            //     return scope.options;
+            // }, function (newVal, oldVal) {
+            //     if (!angular.equals(newVal, _options)) {
+            //         console.log(newVal);
+            //     }
+            // });
+
+
             scope.events = {
                 change: function () {
                     pvt.openPopup();
@@ -66,6 +77,11 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                     }
 
                     pvt.openPopup();
+                    // let it open first
+                    setTimeout(function () {
+                        pvt.updateDropPosition();
+                    });
+
                 },
                 blur: function () {
                     if (itemSelecting) {
@@ -117,12 +133,18 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                 }
             });
 
+
+            var angularUl = element.find('ul'),
+                angularEle = element.find('input'),
+                domUl = angularUl[0];
+
             var pvt = {
                 openPopup: function () {
                     scope.isOpen = true;
                 },
                 closePopup: function () {
                     scope.isOpen = false;
+                    angularUl.removeClass("pCombobox-reverse");
                 },
                 up: function () {
                     if (!scope.isOpen)
@@ -161,9 +183,12 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                 findIndex: function (item) {
                     if (!item)
                         return -1;
-                    item = item.toLowerCase();
+                    if (typeof item == 'string')
+                        item = item.toLowerCase();
+
                     for (var i = 0; i < scope.options.length; i++) {
-                        if (scope.options[i].toLowerCase() === item)
+                        if ((typeof scope.options[i] == 'string' && scope.options[i].toLowerCase() === item)
+                            || scope.options[i] === item)
                             return i;
                     }
                     return -1;
@@ -173,6 +198,44 @@ angular.module('pCombobox', []).directive('pCombobox', [function () {
                     if (searchScope && searchScope.udpateValidation) {
                         searchScope.updateValidation();
                     }
+                },
+                updateDropPosition: function () {
+                    var eleOffset = pvt.offset(angularEle[0])
+                    var eleHeight = domUl.offsetHeight;
+                    var windowHeight = $window.innerHeight;
+
+                    if (eleOffset.top > windowHeight / 2) {
+                        angularUl.addClass("pCombobox-reverse");
+                        //angularUl.prop('style', 'top:-' + eleHeight + 'px');
+                    }
+                    else {
+                        angularUl.removeClass("pCombobox-reverse");
+                        //angularUl.prop('style', '');
+                    }
+                },
+                offset: function (elem) {
+                    // copied from offset function of https://github.com/jquery/jquery/blob/master/src/offset.js
+                    if (!elem) {
+                        return;
+                    }
+                    var doc, docElem, rect, win;
+                    // Return zeros for disconnected and hidden (display: none) elements (gh-2310)
+                    // Support: IE <=11 only
+                    // Running getBoundingClientRect on a
+                    // disconnected node in IE throws an error
+                    if (!elem.getClientRects().length) {
+                        return { top: 0, left: 0 };
+                    }
+
+                    rect = elem.getBoundingClientRect();
+                    doc = elem.ownerDocument;
+                    docElem = doc.documentElement;
+                    win = doc.defaultView;
+                    return {
+                        top: rect.top + win.pageYOffset - docElem.clientTop,
+                        left: rect.left + win.pageXOffset - docElem.clientLeft
+                    };
+
                 }
             }
 
