@@ -1,3 +1,11 @@
+/*!
+* plain-combobox 1.0.0
+* https://github.com/premchandrasingh/plain-combobox
+* Copyright 2017 @ Prem
+* Contributors :- Prem <premchandrasingh@gmail.com>
+* Licensed under: MIT (http://www.opensource.org/licenses/MIT)
+*/
+
 (function (angular) {
     'use strict';
     angular.module('pCombobox', [])

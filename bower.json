@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "homepage": "https://github.com/premchandrasingh/plain-combobox",
   "authors": [
-    "prem <premchandrasingh@gmail.com>"
+    "Prem <premchandrasingh@gmail.com>"
   ],
   "description": "Angular directive to create simple combobox",
   "main": [
-    "src/plain-combobox.js",
-    "src/plain-combobox.css"
+    "dist/plain-combobox.js",
+    "dist/plain-combobox.css"
   ],
   "keywords": [
     "angular",
