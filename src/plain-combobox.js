@@ -4,9 +4,8 @@
         .directive('pCombobox', ['$window', '$timeout', function ($window, $timeout) {
             var templateString = '<div class="pCombobox">' +
                 '        <input type="text" name="{{name}}" placeholder="{{placeholder}}" autocomplete="off" ng-model="search"' +
-                '            class="{{cssClass}}"' +
-                '            ng-required="isRequired" ng-change="events.change()" ng-focus="events.focus()" ng-blur="events.blur($event)" p-combobox-validator' +
-                '            class="form-control" />' +
+                '            class="{{cssClass}}" ng-disabled="isDisabled"' +
+                '            ng-required="isRequired" ng-change="events.change()" ng-focus="events.focus()" ng-blur="events.blur($event)" p-combobox-validator />' +
                 '            <ul ng-show="isOpen">' +
                 '                <li ng-repeat="item in options" ng-click="events.select(item)" ng-mouseenter="events.mouseenter($index)" ng-mousedown="events.mousedown()"' +
                 '                    ng-class="{\'pCombobox-active\': activeIndex === $index}">' +
@@ -23,6 +22,7 @@
                     options: '=',
                     selected: '=',
                     isRequired: '=?',
+                    isDisabled: '=?',
                     name: '@',
                     cssClass: '@',
                     placeholder: '@',
@@ -53,6 +53,7 @@
 
                     scope.name = scope.name || Date.now();
                     scope.isRequired = scope.isRequired || false;
+                    scope.isDisabled = scope.isDisabled || false;
                     scope.search = scope.selected;
                     var _options = scope.options || [];
 
@@ -239,7 +240,7 @@
                                         target.parentNode.scrollTop = target.offsetTop - factor;
                                     }
                                 }
-                            })
+                            }, 10);
 
                         },
                         offset: function (elem) {

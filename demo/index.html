@@ -30,10 +30,11 @@
         <br/>
         <br/>
         <form name="demoFormStrings" ng-submit="demoCtrl.onStringFormSubmit()" novalidate>
-            <p-combobox placeholder="- None -" name="hot-languages" is-required="true" filter="demoCtrl.stringFilter" options="demoCtrl.stringOptions"
+            <p-combobox placeholder="- None -" name="hot-languages" is-disabled="demoCtrl.diabled" is-required="true" filter="demoCtrl.stringFilter" options="demoCtrl.stringOptions"
                 selected="demoCtrl.selectedString" on-selected="demoCtrl.onStringSelected">
             </p-combobox>
             <button type="submit" ng-disabled="demoFormStrings.$invalid">Submit</button>
+            <button type="button" ng-click="demoCtrl.diabled=!demoCtrl.diabled">Enable/Disabled</button>
         </form>
         <p>{{demoCtrl.stringMessage}}</p>
 
