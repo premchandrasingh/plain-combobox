@@ -1,5 +1,5 @@
 /*!
-* plain-combobox 1.0.0
+* plain-combobox 1.0.2
 * https://github.com/premchandrasingh/plain-combobox
 * Copyright 2017 @ Prem
 * Contributors :- Prem <premchandrasingh@gmail.com>
@@ -36,7 +36,8 @@
                     placeholder: '@',
                     filter: '&', // Filter should always return a promise
                     onSelected: '&',
-                    inputFormat: '@'
+                    inputFormat: '@',
+                    onInputFormatValidate: '&',
                 },
                 template: templateString,
                 controller: ['$scope', function ($scope) {
@@ -81,8 +82,15 @@
                             pvt.openPopup();
                             pvt.setActive(-1);
                             scope.selected = scope.search;
-                            if (!pvt.updateValidation()) {
+
+                            var isValid = pvt.checkValidation();
+                            if (!isValid) {
                                 scope.selected = null;
+                            }
+                            if (scope.inputFormat) {
+                                if (scope.onInputFormatValidate && angular.isFunction(scope.onInputFormatValidate())) {
+                                    scope.onInputFormatValidate()({ isValid: isValid, value: scope.search });
+                                }
                             }
                         },
                         focus: function () {
@@ -120,7 +128,7 @@
                             scope.selected = item;
                             scope.search = item;
                             pvt.closePopup()
-                            pvt.updateValidation();
+                            pvt.checkValidation();
 
                             if (scope.onSelected && angular.isFunction(scope.onSelected())) {
                                 scope.onSelected()(item);
@@ -209,14 +217,15 @@
                             }
                             return -1;
                         },
-                        updateValidation: function () {
-                            var isValid = false;
+                        checkValidation: function () {
+                            var isValid;
                             var searchScope = element.find('input').isolateScope();
                             if (searchScope && searchScope.updateValidation) {
                                 isValid = searchScope.updateValidation();
                             } else {
                                 isValid = _isValid(scope.isRequired, scope.search, scope.selected, scope.inputFormat);
                             }
+
                             if (isValid) {
                                 angularEle.removeClass('pCombobox-invalid');
                             } else {
