@@ -34,6 +34,12 @@
                 template: templateString,
                 controller: ['$scope', function ($scope) {
 
+                    $scope.$watch(function () {
+                        return $scope.selected;
+                    }, function (newVal, oldVal) {
+                        $scope.search = newVal;
+                    });
+                    
                     this.getSelected = function () {
                         return $scope.selected;
                     };
