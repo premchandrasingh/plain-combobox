@@ -1,5 +1,5 @@
 /*!
-* plain-combobox 1.0.2
+* plain-combobox 1.0.3
 * https://github.com/premchandrasingh/plain-combobox
 * Copyright 2017 @ Prem
 * Contributors :- Prem <premchandrasingh@gmail.com>
