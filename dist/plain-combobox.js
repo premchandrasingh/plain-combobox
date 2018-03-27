@@ -1,5 +1,5 @@
 /*!
-* plain-combobox 1.0.2
+* plain-combobox 1.0.4
 * https://github.com/premchandrasingh/plain-combobox
 * Copyright 2018 @ Prem
 * Contributors :- Prem <premchandrasingh@gmail.com>
@@ -43,6 +43,12 @@
                 },
                 template: templateString,
                 controller: ['$scope', function ($scope) {
+
+                    $scope.$watch(function () {
+                        return $scope.selected;
+                    }, function (newVal, oldVal) {
+                        $scope.search = newVal;
+                    });
 
                     this.getSelected = function () {
                         return $scope.selected;
