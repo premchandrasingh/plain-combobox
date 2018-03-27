@@ -7,10 +7,12 @@
                 '            class="{{cssClass}}" ng-disabled="isDisabled"' +
                 '            ng-required="isRequired" ng-change="events.change()" ng-focus="events.focus()" ng-blur="events.blur($event)" p-combobox-validator />' +
                 '            <ul ng-show="isOpen">' +
-                '                <li ng-repeat="item in options" ng-click="events.select(item)" ng-mouseenter="events.mouseenter($index)" ng-mousedown="events.mousedown()"' +
+                '                <li ng-repeat="item in $options" ng-click="events.select(item)" ng-mouseenter="events.mouseenter($index)" ng-mousedown="events.mousedown()"' +
                 '                    ng-class="{\'pCombobox-active\': activeIndex === $index}">' +
-                '                    <span ng-if="item.readableName">{{item.readableName}}</span>' +
-                '                    <span ng-if="!item.readableName">{{item}}</span>' +
+                '                    <span ng-if="!oneWay && item.readableName">{{item.readableName}}</span>' +
+                '                    <span ng-if="!oneWay && !item.readableName">{{item}}</span>' +
+                '                    <span ng-if="oneWay && item.readableName">{{::item.readableName}}</span>' +
+                '                    <span ng-if="oneWay && !item.readableName">{{::item}}</span>' +
                 '                </li>' +
                 '            </ul>' +
                 '</div>';
@@ -20,6 +22,7 @@
                 //tranclude: true,
                 scope: {
                     options: '=',
+                    optionsOneWay: '&',
                     selected: '=',
                     isRequired: '=?',
                     isDisabled: '=?',
@@ -28,18 +31,11 @@
                     placeholder: '@',
                     filter: '&', // Filter should always return a promise
                     onSelected: '&',
-                    inputFormat: '@',
-                    onInputFormatValidate: '&',
+                    inputFormat: '@'
                 },
                 template: templateString,
                 controller: ['$scope', function ($scope) {
 
-                    $scope.$watch(function () {
-                        return $scope.selected;
-                    }, function (newVal, oldVal) {
-                        $scope.search = newVal;
-                    });
-                    
                     this.getSelected = function () {
                         return $scope.selected;
                     };
@@ -62,8 +58,17 @@
                     scope.isRequired = scope.isRequired || false;
                     scope.isDisabled = scope.isDisabled || false;
                     scope.search = scope.selected;
-                    var _options = scope.options || [];
 
+                    if (scope.options) {
+                        scope.$options = scope.options;
+                        scope.oneWay = false;
+                    }
+                    else {
+                        scope.$options = scope.optionsOneWay();
+                        if (scope.$options)
+                            scope.oneWay = true;
+                    }
+                    scope.$options = scope.$options || [];
 
 
                     // scope.$watch(function () {
@@ -80,15 +85,8 @@
                             pvt.openPopup();
                             pvt.setActive(-1);
                             scope.selected = scope.search;
-
-                            var isValid = pvt.checkValidation();
-                            if (!isValid) {
+                            if (!pvt.updateValidation()) {
                                 scope.selected = null;
-                            }
-                            if (scope.inputFormat) {
-                                if (scope.onInputFormatValidate && angular.isFunction(scope.onInputFormatValidate())) {
-                                    scope.onInputFormatValidate()({ isValid: isValid, value: scope.search });
-                                }
                             }
                         },
                         focus: function () {
@@ -126,7 +124,7 @@
                             scope.selected = item;
                             scope.search = item;
                             pvt.closePopup()
-                            pvt.checkValidation();
+                            pvt.updateValidation();
 
                             if (scope.onSelected && angular.isFunction(scope.onSelected())) {
                                 scope.onSelected()(item);
@@ -177,14 +175,14 @@
                                 pvt.setActive(upIndex);
                             }
                             else {
-                                pvt.setActive(scope.options.length - 1);
+                                pvt.setActive(scope.$options.length - 1);
                             }
                         },
                         down: function () {
                             if (!scope.isOpen)
                                 return;
                             var downIndex = scope.activeIndex + 1;
-                            if (downIndex < scope.options.length) {
+                            if (downIndex < scope.$options.length) {
                                 pvt.setActive(downIndex);
                             } else {
                                 pvt.setActive(0);
@@ -195,8 +193,8 @@
                             scope.activeIndex = index;
                         },
                         selectActiveItem: function () {
-                            if (scope.activeIndex >= 0 && scope.activeIndex < scope.options.length) {
-                                scope.events.select(scope.options[scope.activeIndex]);
+                            if (scope.activeIndex >= 0 && scope.activeIndex < scope.$options.length) {
+                                scope.events.select(scope.$options[scope.activeIndex]);
                             }
                             else if (scope.activeIndex === -1) {
                                 scope.events.select(scope.search);
@@ -208,22 +206,21 @@
                             if (typeof item == 'string')
                                 item = item.toLowerCase();
 
-                            for (var i = 0; i < scope.options.length; i++) {
-                                if ((typeof scope.options[i] == 'string' && scope.options[i].toLowerCase() === item)
-                                    || scope.options[i] === item)
+                            for (var i = 0; i < scope.$options.length; i++) {
+                                if ((typeof scope.$options[i] == 'string' && scope.$options[i].toLowerCase() === item)
+                                    || scope.$options[i] === item)
                                     return i;
                             }
                             return -1;
                         },
-                        checkValidation: function () {
-                            var isValid;
+                        updateValidation: function () {
+                            var isValid = false;
                             var searchScope = element.find('input').isolateScope();
                             if (searchScope && searchScope.updateValidation) {
                                 isValid = searchScope.updateValidation();
                             } else {
                                 isValid = _isValid(scope.isRequired, scope.search, scope.selected, scope.inputFormat);
                             }
-
                             if (isValid) {
                                 angularEle.removeClass('pCombobox-invalid');
                             } else {
