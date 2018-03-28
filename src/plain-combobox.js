@@ -93,6 +93,8 @@
                             scope.selected = scope.search;
                             if (!pvt.updateValidation()) {
                                 scope.selected = null;
+                            } else if (scope.onSelected && angular.isFunction(scope.onSelected())) {
+                                scope.onSelected()(scope.selected);
                             }
                         },
                         focus: function () {
