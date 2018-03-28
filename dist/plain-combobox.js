@@ -1,5 +1,5 @@
 /*!
-* plain-combobox 1.0.4
+* plain-combobox 1.0.5
 * https://github.com/premchandrasingh/plain-combobox
 * Copyright 2018 @ Prem
 * Contributors :- Prem <premchandrasingh@gmail.com>
@@ -101,6 +101,8 @@
                             scope.selected = scope.search;
                             if (!pvt.updateValidation()) {
                                 scope.selected = null;
+                            } else if (scope.onSelected && angular.isFunction(scope.onSelected())) {
+                                scope.onSelected()(scope.selected);
                             }
                         },
                         focus: function () {
