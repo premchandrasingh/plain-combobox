@@ -1,5 +1,5 @@
 /*!
-* plain-combobox 1.0.7
+* plain-combobox 1.0.8
 * https://github.com/premchandrasingh/plain-combobox
 * Copyright 2018 @ Prem
 * Contributors :- Prem <premchandrasingh@gmail.com>
@@ -14,7 +14,7 @@
                 '        <input type="text" name="{{name}}" placeholder="{{placeholder}}" autocomplete="off" ng-model="search"' +
                 '            class="{{cssClass}}" ng-disabled="isDisabled"' +
                 '            ng-required="isRequired" ng-change="events.change()" ng-focus="events.focus()" ng-blur="events.blur($event)" p-combobox-validator' +
-                '            maxlength="{{:: maxLength != 0 ? maxLength : -1 }}" />' +
+                '            maxlength="{{:: maxLength != 0 ? maxLength : \'\' }}" />' +
                 '            <ul ng-show="isOpen">' +
                 '                <li ng-repeat="item in $options" ng-click="events.select(item)" ng-mouseenter="events.mouseenter($index)" ng-mousedown="events.mousedown()"' +
                 '                    ng-class="{\'pCombobox-active\': activeIndex === $index}">' +
